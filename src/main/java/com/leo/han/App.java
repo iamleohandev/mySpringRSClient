@@ -1,8 +1,13 @@
 package com.leo.han;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
 
-import com.leo.han.services.CalculateService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jms.core.JmsTemplate;
+
+import com.leo.han.beans.User;
+
 
 /**
  * Hello world!
@@ -10,19 +15,22 @@ import com.leo.han.services.CalculateService;
  */
 public class App 
 {
-    public static void main( String[] args )
+
+    public static void main( String[] args ) throws JMSException
     {
         System.out.println( "start" );
         
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:client-config.xml");
         
-        CalculateService service = context.getBean(CalculateService.class);
         
-        
-        System.out.println(service.getSummary());
-        
-        System.out.println(service.sum(20, 30)); 
-        System.out.println( "end" );
-        
+       JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
+       
+       ObjectMessage msg = (ObjectMessage)jmsTemplate.receive();
+       
+       User user = (User) msg.getObject();
+       
+       System.out.println("User Name:  "+user.getUsername());
+       System.out.println("User Age:  "+user.getAge());
+       System.out.println("User Name:  "+user.getComment());
     }
 }

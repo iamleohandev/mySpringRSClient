@@ -4,18 +4,26 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-
-
-
-
-
-	<bean id="calculateService"
-		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-	<property name="serviceUrl"
-		value="http://localhost:8080/mySpringRSServer/calc.service">
-	</property>
-	<property name="serviceInterface"
-		value="com.leo.han.services.CalculateService">
-	</property>
+	<!-- Step1: configure the first JMS component, a connection factory that 
+		direct to the Message Broker -->
+	<bean id="connectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616"></property>
 	</bean>
+
+	<!-- Step2: configure the second JMS component, a destination that is realted 
+		to the Message Broker -->
+	<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="my.jms.service.queue"></constructor-arg>
+	</bean>
+
+	<!-- Step3: configure the jmsTemplate to send/receive message according 
+		to the Message Broker and Destination -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<!-- Use the default destination name -->
+		<property name="defaultDestinationName" value="my.jms.service.queue">
+		</property>
+	</bean>
+
+
 </beans>
