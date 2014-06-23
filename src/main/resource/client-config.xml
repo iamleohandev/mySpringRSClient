@@ -16,14 +16,12 @@
 		<constructor-arg value="my.jms.service.queue"></constructor-arg>
 	</bean>
 
-	<!-- Step3: configure the jmsTemplate to send/receive message according 
-		to the Message Broker and Destination -->
-	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+	<!-- Step3: configure the JmsInvokerProxyFactory -->
+	<bean id="sampleService"
+		class="org.springframework.jms.remoting.JmsInvokerProxyFactoryBean">
 		<property name="connectionFactory" ref="connectionFactory"></property>
-		<!-- Use the default destination name -->
-		<property name="defaultDestinationName" value="my.jms.service.queue">
+		<property name="queueName" value="my.jms.service.queue"></property>
+		<property name="serviceInterface" value="com.leo.han.services.SampleService">
 		</property>
 	</bean>
-
-
 </beans>

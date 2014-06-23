@@ -4,9 +4,9 @@ import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jms.core.JmsTemplate;
 
 import com.leo.han.beans.User;
+import com.leo.han.services.SampleService;
 
 
 /**
@@ -23,14 +23,11 @@ public class App
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:client-config.xml");
         
         
-       JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
+       SampleService sampleService = context.getBean(SampleService.class);
        
-       ObjectMessage msg = (ObjectMessage)jmsTemplate.receive();
+       String result = sampleService.getServiceMessage("Hello", "World");
        
-       User user = (User) msg.getObject();
-       
-       System.out.println("User Name:  "+user.getUsername());
-       System.out.println("User Age:  "+user.getAge());
-       System.out.println("User Name:  "+user.getComment());
+       System.out.println("Result:   "+result);
+
     }
 }
